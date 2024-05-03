@@ -8,4 +8,19 @@
 // - Print out your full name using the functions
 
 import { strict as assert } from "assert";
+function myLastName(lastname){
+    console.log(lastname)
+}
+myLastName('Anero')
 
+function myFirstName(firstname){
+ 
+    console.log(`Hey my name is ${firstname}`)
+}
+myFirstName("Chinwe")
+
+function fullName(myFirstName, myLastName){
+    console.log(`This is my fullname ${myFirstName + myLastName}`)
+
+}
+fullName("Chinwe" ,  "Anero");
