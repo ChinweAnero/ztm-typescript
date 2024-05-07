@@ -9,3 +9,16 @@
 // 
 // Useful links:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
+
+const arrowSum = (lhs: number, rhs:number): number => {
+    return lhs + rhs;
+}
+//const two = sum(1, 1);
+const ten = arrowSum(5, 5);
+function calculate(fn:(lhs: number, rhs: number) => number){
+    const result = fn(5, 6)
+
+}
+calculate(arrowSum);
+
+
