@@ -10,3 +10,38 @@ import { strict as assert } from "assert";
 //
 // Useful links:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+// const numbers: number[] = [1, 2, 3];
+// let letters: string[] = ["a", "b", "c"];
+
+// letters = ["a", "b", "c"];
+// const b = letters[1];
+// assert.equal(b, "b");
+
+// letters[1] = "n"
+// assert(letters[1] ==="n");
+// assert.deepEqual(letters, [["a", "n", "c"]]);
+
+// // multidemsional arrays
+// const names = [
+//     ["chinwe", "A"],
+//     ["Bishop", "B"]
+// ]
+// const chinwe = names[0][0]
+// const B = names[1][1]
+// console.log(B);
+// console.log(chinwe);
+
+const nums: number[] = [];
+nums.push(10)
+nums.push(20)
+nums.push(30)
+console.log(nums)
+
+nums.pop();
+console.log(nums)
+
+nums.splice(0, 1)
+console.log(nums)
+
+
