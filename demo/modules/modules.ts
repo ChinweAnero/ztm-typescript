@@ -7,3 +7,8 @@ import { strict as assert } from "assert";
 //
 // Useful links:
 // https://www.typescriptlang.org/docs/handbook/2/modules.html
+
+import {add, pi, Int as interger} from "./maths"
+import { Point } from "./coord";
+
+const sum = add(2, 2);

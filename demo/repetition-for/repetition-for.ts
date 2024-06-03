@@ -16,3 +16,35 @@
 //
 // Useful links:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for
+
+// for (let i = 1; i<= 5; i++){
+//     console.log(`${i}`)
+// }
+
+// for(let i = 5; i> 0; i--){
+//     console.log(`${i}`)
+// }
+
+// for (let i = 1; i<= 1000; i++){
+//     console.log(`${i}`)
+//     if(i === 3){
+//         break;
+//     }
+// }
+
+for (let i = 1; i<= 1000; i++){
+    console.log(`${i}`)
+    if(i === 5){
+        break;
+    }
+    if (i === 3){
+        continue;
+    }
+    console.log("hi")
+
+}
+
+const letters = ["a", "b", "c", "d"];
+for (let i = 0; i < letters.length; i ++){
+    console.log(letters[i]);
+}

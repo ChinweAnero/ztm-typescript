@@ -10,3 +10,33 @@ import { strict as assert } from "assert";
 //
 // Useful links:
 // https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types
+
+type Title = string;
+type PublisherYear = number;
+type Book = [Title, PublisherYear]
+
+const sample: Book = ["sample", 1980];
+
+assert.equal(sample[0], "sample")
+
+function coord(): [number, number]{
+    return [3, 5]
+}
+
+const coordinate = coord();
+assert.equal(coordinate[0], 3)
+assert.equal(coordinate[0], 5)
+
+// another way of calling the function
+const [x, y] = coord();
+assert.equal(x, 3);
+assert.equal(y, 5);
+
+// putting tuples inside arrays
+const multi: [number, number][] = [
+    coord(),
+    [1, 1],
+    [0, 0],
+    [9, 9]
+]
+
