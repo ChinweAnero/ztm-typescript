@@ -8,3 +8,18 @@
 //
 // Useful links:
 // https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html
+
+const abc = ["a", "b", "c"]
+for(const letter of abc){
+    console.log(letter)
+}
+
+const nums = {
+    one: 1,
+    two: 2
+}
+let property: keyof typeof nums;
+for (property in nums){
+    console.log(`${nums[property]}`);
+
+}

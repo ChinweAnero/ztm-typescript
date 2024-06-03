@@ -11,3 +11,20 @@ import { strict as assert } from "assert";
 //
 // Useful links:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+
+
+type Name = string;
+type Score = number;
+
+const testScores: Map<string, number> = new Map();
+testScores.set("Alice", 90);
+testScores.set("Bob", 99);
+testScores.set("Kane", 99);
+
+for(const[name, score] of testScores){
+    console.log(`${name} score is ${score}`)
+}
+
+for (const name of testScores.keys()){
+    console.log(`${name}`)
+}
