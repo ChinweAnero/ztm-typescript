@@ -37,37 +37,57 @@ import { strict as assert } from "assert";
 
 
 interface PriorityAccess{
-    weekday: string
-    weekend: string
-    holidays: string
-    
-
+    hasPriorityAccess(day: string):boolean
 }
 
 class standard implements PriorityAccess{
-    weekday: string;
-    weekend: string; 
-    holidays: string; 
-    ticketType: string
+  hasPriorityAccess(day: string):boolean {
+    return false 
+    
+  }
+}
 
-    constructor(days: string, ticketType: string){
-        this.weekday = days
-        this.weekend = days
-        this.holidays = days 
-        this.ticketType = ticketType
-        
-        function checkPriorityRights(days: string, ticketType: string){
-            ticketType = "standard"
-            if(ticketType === "standard"){
-                console.log("Sorry no priority access")
-            }
-        }
-        
+class premium implements PriorityAccess{
+  hasPriorityAccess(day: string): boolean {
+    return day === "weekday"
+  }
+}
 
-    } 
-} 
-const priority = new standard("day", "ticket")
+class member implements PriorityAccess{
+  hasPriorityAccess(day: string): boolean {
+    switch (day) {
+      case "weekday":
+      case "weekend":
+        return true;
+    default:
+        return false;
+    }   
+  }  
+}
 
+class VIP implements PriorityAccess{
+  hasPriorityAccess(day: string): boolean {
+    return true;
+  }
+}
 
+const standardTicket = new standard()
+assert.equal(standardTicket.hasPriorityAccess("weekday"), false)
+assert.equal(standardTicket.hasPriorityAccess("weekend"), false)
+assert.equal(standardTicket.hasPriorityAccess("holiday"), false)
+    
+const premiumTicket = new premium();
+assert.equal(premiumTicket.hasPriorityAccess("weekday"), true);
+assert.equal(premiumTicket.hasPriorityAccess("weekend"), false);
+assert.equal(premiumTicket.hasPriorityAccess("holiday"), false);
 
+const MemberTicket = new member();
+assert.equal(MemberTicket.hasPriorityAccess("weekday"), true);
+assert.equal(MemberTicket.hasPriorityAccess("weekend"), true);
+assert.equal(MemberTicket.hasPriorityAccess("holiday"), false);
 
+const vip = new VIP();
+assert.equal(vip.hasPriorityAccess("weekday"), true);
+assert.equal(vip.hasPriorityAccess("weekend"), true);
+assert.equal(vip.hasPriorityAccess("holiday"), true);
+  
