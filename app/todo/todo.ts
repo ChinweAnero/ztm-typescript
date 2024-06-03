@@ -54,7 +54,9 @@ function addTodo(task: string): void{
 
 
 }
-
+function cliInvalidOptionFunction(command: string): void {
+    console.log(`invalid number of options for subcommand ${command}`)
+}
 function cli(): void{
     const subcommand = process.argv[2]
     const options = process.argv.slice(3);
@@ -71,7 +73,7 @@ function cli(): void{
                 addTodo(options[0]);
             }
             else{
-                console.log(`invalid number of options for subcommand "add"`)
+                cliInvalidOptionFunction("add")
             }
             break;
         case "done":
@@ -85,7 +87,7 @@ function cli(): void{
                 }
             }
             else{
-                console.log(`invalid number of options for subcommand "add"`)
+                cliInvalidOptionFunction("done")
             }
             break;
         case "list":
@@ -93,12 +95,14 @@ function cli(): void{
                 listTodos();
             }
             else{
-                console.log(`invalid number of options for subcommand "add"`)
+                cliInvalidOptionFunction("list")
             }
             break;
             default:
                 console.log("invalid subcommand")
     }
-    cli();
+  
 
 }
+cli()
+

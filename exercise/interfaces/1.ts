@@ -34,3 +34,40 @@
 //    line
 
 import { strict as assert } from "assert";
+
+
+interface PriorityAccess{
+    weekday: string
+    weekend: string
+    holidays: string
+    
+
+}
+
+class standard implements PriorityAccess{
+    weekday: string;
+    weekend: string; 
+    holidays: string; 
+    ticketType: string
+
+    constructor(days: string, ticketType: string){
+        this.weekday = days
+        this.weekend = days
+        this.holidays = days 
+        this.ticketType = ticketType
+        
+        function checkPriorityRights(days: string, ticketType: string){
+            ticketType = "standard"
+            if(ticketType === "standard"){
+                console.log("Sorry no priority access")
+            }
+        }
+        
+
+    } 
+} 
+const priority = new standard("day", "ticket")
+
+
+
+
