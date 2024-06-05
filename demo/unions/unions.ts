@@ -7,3 +7,19 @@
 //
 // Useful links:
 // https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types
+
+type Colours = "red" | "green" | "blue";
+const r: Colours = "red";
+
+function setBgColour(c: Colours){
+    switch(c){
+        case "red":
+            break;
+        case "blue":
+            break;
+        case "green":
+            break;
+    }
+}
+setBgColour("blue");
+
