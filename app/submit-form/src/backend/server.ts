@@ -31,7 +31,7 @@ const fastify = Fastify({
 const accountCreateRequestSchema = z.object({
     email: z.string(),
     password: z.string(),
-    agreedToTerms: z.string()
+    agreedToTerms: z.string().optional()
 })
 type accountCreateRequest = z.infer<typeof accountCreateRequestSchema>;
 
@@ -51,12 +51,19 @@ fastify.get("/", async (request, reply) =>{
     
 })
 
+fastify.get("/signin", async (request, reply) =>{
+    const rendered = templates.render("signin.njk", {environment})
+    return await reply
+        .header("Content-Type", "text/html; charset=utf-8")
+        .send(rendered)
+    
+})
+
 fastify.get("/signup", async (request, reply) =>{
     const rendered = templates.render("signup.njk", {environment})
     return await reply
         .header("Content-Type", "text/html; charset=utf-8")
         .send(rendered)
-    
 })
 
 fastify.post("/account/signup", async (request, reply) =>{
@@ -70,9 +77,8 @@ fastify.post("/account/signup", async (request, reply) =>{
     if (requestData.agreedToTerms !== "on"){
         return await reply.redirect("/signup");
     }
-    
-    // connect to database
-    const db = await connect(USERS_DB);
+
+const db = await connect(USERS_DB);
     const UserRepository = new SqliteUserRepository(db);
     // then add new user
     try{
@@ -84,20 +90,14 @@ fastify.post("/account/signup", async (request, reply) =>{
 
         }
         const user = await UserRepository.create(newUser);
-        return await reply.redirect("/welcome")
+        console.log(user);
+        return await reply.redirect("/welcome");
     } catch(error){
         //TO DO NEXT: SHOW ERROR MESSAGE
         return await reply.redirect("/signup");
     }
 })
 
-fastify.get("/signin", async (request, reply) =>{
-    const rendered = templates.render("signin.njk", {environment})
-    return await reply
-        .header("Content-Type", "text/html; charset=utf-8")
-        .send(rendered)
-    
-})
 
 //start DB server
 const start = async():Promise<void> =>{
