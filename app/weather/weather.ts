@@ -28,7 +28,7 @@ async function main(): Promise<number>{
         return 1;
     }
    
-    console.log(`Fetching weather data for ${locationInfo.display_name}...\n`)
+    console.log(`Fetching weather data for ${locationInfo.display_name}.\n`)
     try{
         const weather = await fetchWeatherData(
             WEATHER_API_URL,

@@ -1,3 +1,37 @@
+import path from "path"
+import formBody from "@fastify/formbody";
+import staticFiles from "@fastify/static"
+import axios from "axios";
+import dotenv from "dotenv"
+import fastify from "fastify";
+import nunjucks from "nunjucks"
+import z from "zod"
+import { fetchLocationData } from "./location";
+import { fetchWeatherData } from "./weatherapi";
+
+
+
+dotenv.config()
+const environment = process.env.NODE_ENV;
+const templates = new nunjucks.Environment(new nunjucks.FileSystemLoader("src/backend/templates"))
+
+const WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast";
+const GEOCODE_API_URL = "https://geocode.maps.co/search";
+const HTTP_CLIENT = axios;
+
+const server = fastify({
+  logger: true,
+
+});
+
+{
+  server.register(formBody)
+  server.register(staticFiles, {
+    root: path.join(__dirname, "../../dist"),
+
+  })
+}
+
 const weatherCodeToImage = (code: number): string => {
   switch (code) {
     case 0: return "/static/img/clear.svg";
@@ -31,3 +65,55 @@ const weatherCodeToImage = (code: number): string => {
     default: return "/static/img/info.svg";
   }
 };
+
+// get the route address, location = locationName
+const locationSchema = z.object({
+  location: z.string(),
+
+
+})
+server.get("/", async(request, reply) =>{
+  const queryParams = request.query;
+  try{
+    const {location} = locationSchema.parse(queryParams)
+    const LocationInfo = await fetchLocationData(GEOCODE_API_URL, location, HTTP_CLIENT);
+    const weatherInfo = await fetchWeatherData(WEATHER_API_URL, LocationInfo.lat, LocationInfo.lon, HTTP_CLIENT,)
+
+    const rendered = templates.render("weather.njk",{
+      environment,
+      location: LocationInfo.display_name,
+      currentDate: new Date().toDateString(), 
+      weather:{
+        ...weatherInfo,
+        conditionImage: weatherCodeToImage(weatherInfo.weathercode),
+        condition: weatherInfo.condition(),
+        lowTemp: weatherInfo.lowTemp(),
+        highTemp: weatherInfo.highTemp()
+
+      }
+
+
+    })
+    await reply
+      .header("Content-Type", "text/html; charset=utf-8")
+      .send(rendered)
+  }catch(error){
+    console.log(error);
+    const rendered = templates.render("get_started.njk", {environment})
+    await reply
+    .header("Content-Type", "text/html; charset=utf-8")
+    .send(rendered)
+  }
+
+})
+
+const start = async():Promise<void> =>{
+  try{
+    await server.listen({port: 7079});
+  }catch(error){
+    server.log.error(error);
+    process.exit(1);
+  }
+
+};
+start();
