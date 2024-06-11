@@ -9,6 +9,7 @@ import {z} from "zod"
 
 import{ connect, newDb, SqliteSession, SqliteUserRepository, } from "./db"
 import { request } from "http"
+import { comparePassword, hashPassword } from "./auth"
 
 // set up user environment and cookie
 dotenv.config();
@@ -27,6 +28,12 @@ const USERS_DB = "./users.sqlite"
 const fastify = Fastify({
     logger: true,
 })
+
+const accountLoginRequestSchema = z.object({
+    email: z.string(),
+    password: z.string(),
+})
+type AccountLoginRequest = z.infer<typeof accountLoginRequestSchema>;
 
 const accountCreateRequestSchema = z.object({
     email: z.string(),
@@ -58,6 +65,33 @@ fastify.get("/signin", async (request, reply) =>{
         .send(rendered)
     
 })
+fastify.post("/account/signin", async (request, reply) =>{
+    let requestData: AccountLoginRequest;
+    try{
+        requestData = accountCreateRequestSchema.parse(request.body)
+    }
+    catch(error){
+        return await reply.redirect("/signup");
+    }
+
+    const db = await connect(USERS_DB);
+    const UserRepository = new SqliteUserRepository(db)
+    try{
+        const user = await UserRepository.findByEmail(requestData.email)
+        if(user === undefined){
+            //To do Error message
+            return await reply.redirect("/signin")
+        }
+        const passwordMatches = await comparePassword(requestData.password, user.hashedPassword);
+        if(!passwordMatches){
+            return await reply.redirect("/signin");
+        }
+        return await reply.redirect("/welcome");
+    }catch(error){
+        return await reply.redirect("/signin")
+
+    }
+})
 
 fastify.get("/signup", async (request, reply) =>{
     const rendered = templates.render("signup.njk", {environment})
@@ -79,14 +113,18 @@ fastify.post("/account/signup", async (request, reply) =>{
     }
 
 const db = await connect(USERS_DB);
-    const UserRepository = new SqliteUserRepository(db);
+const UserRepository = new SqliteUserRepository(db);
+
+const hashedPassword = await hashPassword(requestData.password)
+
+
     // then add new user
     try{
         const newUser  = {
             ...requestData,
             id: 0,
             agreedToTerms: true,
-            hashedPassword: "FIXME",
+            hashedPassword
 
         }
         const user = await UserRepository.create(newUser);
